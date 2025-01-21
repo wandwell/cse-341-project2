@@ -1,0 +1,19 @@
+{
+  "name": "cse-341-project2",
+  "version": "1.0.0",
+  "description": "My second project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sariah Wandler",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wandwell/cse-341-project2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wandwell/cse-341-project2/issues"
+  },
+  "homepage": "https://github.com/wandwell/cse-341-project2#readme"
+}

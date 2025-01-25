@@ -18,7 +18,7 @@ Content-Type: application/json
     "firstName": "Cody",
     "lastName": "Wandler",
     "username": "CWandler",
-    "password": "4Password!"
+    "password": "Password4"
 }
 
 
@@ -65,4 +65,4 @@ Content-Type: application/json
 DELETE http://localhost:8080/users/679128236ef8671108421cef
 
 ###Delete Pet
-DELETE http://localhost:8080/pets/679127246ef8671108421cee
+DELETE http://localhost:8080/pets/6793cd50748e46a1f9b55f73

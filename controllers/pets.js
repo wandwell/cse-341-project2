@@ -4,6 +4,10 @@ const ObjectId = require('mongodb').ObjectId;
 const getAll = async (req, res) => {
     //#swaggertags=['pets']
     try {
+        //artificial error for testing purposes
+        if (req.query.triggerError === 'true') {
+            throw new Error('Artificial Error for demonstration')
+        }
         const lists = await mongodb
             .getDatabase()
             .db('project2')

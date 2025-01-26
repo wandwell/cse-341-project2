@@ -2,8 +2,11 @@ const mongodb = require('../data/database');
 const ObjectId = require('mongodb').ObjectId;
 
 const getAll = async (req, res) => {
-    //#swaggertags=['pets']
+    //#swaggertags=['users']
     try {
+        if (req.query.triggerError === 'true') {
+            throw new Error('Artificial Error for demonstration')
+        }
         const lists = await mongodb
             .getDatabase()
             .db('project2')
@@ -18,7 +21,7 @@ const getAll = async (req, res) => {
 };
 
 const getSingle = async (req, res) => {
-    //#swaggertags=['pets']
+    //#swaggertags=['users']
     try {
         const itemId = new ObjectId(req.params.id);
         const list = await mongodb

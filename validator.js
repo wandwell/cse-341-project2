@@ -30,7 +30,7 @@ const validate = (req, res, next) => {
   }
   console.log('Validation errors:', errors.array());
   const extractedErrors = errors.array().map(err => ({ [err.param]: err.msg }));  
-  return res.status(422).json({
+  return res.status(400).json({
       errors: extractedErrors,
   });
 };

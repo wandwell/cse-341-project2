@@ -15,9 +15,19 @@
     "/users/": {
       "get": {
         "description": "",
+        "parameters": [{
+          "name": "triggerError",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "description": "Set to true to trigger an artificial error"
+        }],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       },
@@ -70,6 +80,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       },
@@ -136,12 +149,19 @@
     "/pets/": {
       "get": {
         "description": "",
-        "produces": [
-          "application/json"
-        ],
+        "parameters": [{
+          "name": "triggerError",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "description": "Set to true to trigger an artificial error"
+        }],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       },
@@ -206,6 +226,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description":"Bad Request"
           }
         }
       },

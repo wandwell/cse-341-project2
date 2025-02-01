@@ -1,4 +1,4 @@
-const mongodb = require('../data/database');
+const { Pet } = require('../models/pets')
 const ObjectId = require('mongodb').ObjectId;
 
 const getAll = async (req, res) => {
@@ -8,12 +8,7 @@ const getAll = async (req, res) => {
         if (req.query.triggerError === 'true') {
             throw new Error('Artificial Error for demonstration')
         }
-        const lists = await mongodb
-            .getDatabase()
-            .db('project2')
-            .collection('pets')
-            .find()
-            .toArray();
+        const lists = await Pet.find();
         res.setHeader('Content-Type', 'application/json');
         res.status(200).json(lists);
     } catch (err) {
@@ -24,25 +19,19 @@ const getAll = async (req, res) => {
 const getSingle = async (req, res) => {
     //#swaggertags=['pets']
     try {
-        const itemId = new ObjectId(req.params.id);
-        const list = await mongodb
-            .getDatabase()
-            .db('project2')
-            .collection('pets')
-            .find({ _id: itemId })
-            .toArray();
+        const petId = new ObjectId(req.params.id);
+        const list = await Pet.findById(petId);
         res.setHeader('Content-Type', 'application/json');
         res.status(200).json(list);
     } catch (err) {
-        res.status(400).json({ message: err });
+        res.status(400).json({ message: err.message });
     }
 };
-
 
 const createPet = async(req, res, next) => {
     //#swaggertags=['pets']
    try{ 
-        const pet = {
+        const pet = new Pet({
             name: req.body.name,
             type: req.body.type,
             breed: req.body.breed,
@@ -50,9 +39,9 @@ const createPet = async(req, res, next) => {
             vet: req.body.vet,
             diet: req.body.diet,
             allergies: req.body.allergies
-        };
+        });
 
-        const response = await mongodb.getDatabase().db('project2').collection('pets').insertOne(pet);
+        const response = await pet.save();
 
         if(response.acknowledged) {
             res.status(204).send();
@@ -77,8 +66,7 @@ const updatePet = async(req, res) => {
         allergies: req.body.allergies
     };
 
-    const response = await mongodb.getDatabase().db('project2').collection('pets').replaceOne({_id: petId}, pet);
-
+    const response = await Pet.findByIdAndUpdate(petId, pet, { new: true });
     if(response.modifiedCount > 0) {
         res.status(204).send();
     } else {
@@ -89,7 +77,7 @@ const updatePet = async(req, res) => {
 const deletePet = async(req, res) => {
     //#swaggertags=['pets']
     const petId = new ObjectId(req.params.id);
-    const response = await mongodb.getDatabase().db('project2').collection('pets').deleteOne({_id: petId});
+    const response = await Pet.findByIdAndDelete(petId)
 
     if(response.deletedCount > 0) {
         res.status(204).send();

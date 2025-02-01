@@ -1,100 +1,92 @@
-const mongodb = require('../data/database');
+const { User } = require('../models/users');
 const ObjectId = require('mongodb').ObjectId;
+const bcrypt = require('bcryptjs')
 
 const getAll = async (req, res) => {
-    //#swaggertags=['users']
-    try {
-        if (req.query.triggerError === 'true') {
-            throw new Error('Artificial Error for demonstration')
-        }
-        const lists = await mongodb
-            .getDatabase()
-            .db('project2')
-            .collection('users')
-            .find()
-            .toArray();
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(lists);
-    } catch (err) {
-        res.status(400).json({ message: err });
+  //#swaggertags=['users']
+  try {
+    if (req.query.triggerError === 'true') {
+      throw new Error('Artificial Error for demonstration');
     }
+    const lists = await User.find();
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json(lists);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 };
 
 const getSingle = async (req, res) => {
-    //#swaggertags=['users']
-    try {
-        const itemId = new ObjectId(req.params.id);
-        const list = await mongodb
-            .getDatabase()
-            .db('project2')
-            .collection('users')
-            .find({ _id: itemId })
-            .toArray();
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(list);
-    } catch (err) {
-        res.status(400).json({ message: err });
-    }
+  //#swaggertags=['users']
+  try {
+    const userId = new ObjectId(req.params.id);
+    const lists = await User.findById(userId);
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json(lists);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 };
 
+const createUser = async (req, res, next) => {
+  //#swaggertags=['users']
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const user = new User({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      username: req.body.username,
+      password: hashedPassword,
+      admin: false
+    });
 
-const createUser = async(req, res, next) => {
-    //#swaggertags=['users']
-    try{
-        const user = {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            username: req.body.username,
-            password: req.body.password,
-        };
+    const response = await user.save();
 
-        const response = await mongodb.getDatabase().db('project2').collection('users').insertOne(user);
-
-        if(response.acknowledged) {
-            res.status(204).send();
-        } else {
-            res.status(500).json(response.error || 'Some Error occurred while updating the user.')
-        };
-    } catch (error) {
-        next(error);
+    if (response) {
+      res.status(201).json(response);
+    } else {
+      res.status(500).json('Some error occurred while updating the user.');
     }
-}
+  } catch (error) {
+    next(error);
+  }
+};
 
-const updateUser = async(req, res) => {
-    //#swaggertags=['users']
-    const userId = new ObjectId(req.params.id);
-    const user = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        username: req.body.username,
-        password: req.body.password,
-    };
+const updateUser = async (req, res) => {
+  //#swaggertags=['users']
+  const userId = new ObjectId(req.params.id);
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  const user = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    username: req.body.username,
+    password: hashedPassword,
+  };
 
-    const response = await mongodb.getDatabase().db('project2').collection('users').replaceOne({_id: userId}, user);
+  const response = await User.findByIdAndUpdate(userId, user, { new: true });
 
-    if(response.modifiedCount > 0) {
-        res.status(204).send();
-    } else {
-        res.status(500).json(response.error || 'Some Error occurred while updating the user.')
-    };
-}
+  if (response) {
+    res.status(200).json(response);
+  } else {
+    res.status(500).json('Some error occurred while updating the user.');
+  };
+};
 
-const deleteUser = async(req, res) => {
-    //#swaggertags=['users']
-    const userId = new ObjectId(req.params.id);
-    const response = await mongodb.getDatabase().db('project2').collection('users').deleteOne({_id: userId});
-    
-    if(response.deletedCount > 0) {
-        res.status(204).send();
-    } else {
-        res.status(500).json(response.error || 'Some Error occurred while updating the user.')
-    };
-}
+const deleteUser = async (req, res) => {
+  const userId = new ObjectId(req.params.id);
+  const response = await User.findByIdAndDelete(userId);
+
+  if (response) {
+    res.status(204).send();
+  } else {
+    res.status(500).json('Some error occurred while deleting the user.');
+  }
+};
 
 module.exports = {
-    getAll,
-    getSingle,
-    createUser,
-    updateUser,
-    deleteUser
+  getAll,
+  getSingle,
+  createUser,
+  updateUser,
+  deleteUser,
 };

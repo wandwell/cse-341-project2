@@ -5,10 +5,10 @@
     "description": "Project 2 API",
     "version": "1.0.0"
   },
-  "host": "//cse-341-project2-bj3o.onrender.com",
+  "host": "/localhost:8080",
   "basePath": "/",
   "schemes": [
-    "https"
+    "http"
   ],
   "paths": {
     "/users/": {
@@ -16,10 +16,10 @@
         "description": "",
         "parameters": [{
           "name": "triggerError",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "description": "Set to true to trigger an artificial error"
+          "in": "query",
+          "required": false,
+          "type": "boolean",
+          "description": "Set to true to trigger an artificial error"
         }],
         "responses": {
           "200": {
@@ -150,10 +150,10 @@
         "description": "",
         "parameters": [{
           "name": "triggerError",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "description": "Set to true to trigger an artificial error"
+          "in": "query",
+          "required": false,
+          "type": "boolean",
+          "description": "Set to true to trigger an artificial error"
         }],
         "responses": {
           "200": {
@@ -227,7 +227,7 @@
             "description": "OK"
           },
           "400": {
-            "description":"Bad Request"
+            "description": "Bad Request"
           }
         }
       },
@@ -296,6 +296,46 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/login/": {
+      "post": {
+        "tags": ["login"],
+        "summary": "Login to the application",
+        "description": "Authenticate user using passport local strategy",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "credentials",
+            "description": "User credentials",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "headers": {
+              "Set-Cookie": {
+                "description": "JWT token",
+                "type": "string"
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
           }
         }
       }

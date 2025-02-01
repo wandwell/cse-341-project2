@@ -5,10 +5,10 @@
     "description": "Project 2 API",
     "version": "1.0.0"
   },
-  "host": "/localhost:8080",
+  "host": "https://cse-341-project2-bj3o.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "paths": {
     "/users/": {

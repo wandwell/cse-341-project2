@@ -1,6 +1,5 @@
 const { Pet } = require('../models/pets');
 const ObjectId = require('mongodb').ObjectId;
-const bcrypt = require('bcryptjs')
 
 const getAll = async (req, res) => {
   //#swaggertags=['pets']
@@ -31,13 +30,14 @@ const getSingle = async (req, res) => {
 const createPet = async (req, res, next) => {
   //#swaggertags=['pets']
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const pet = new Pet({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      petname: req.body.petname,
-      password: hashedPassword,
-      admin: false
+        name: req.body.name,
+        type: req.body.type,
+        breed: req.body.breed,
+        owner: req.body.owner,
+        vet: req.body.vet,
+        diet: req.body.diet,
+        allergies: req.body.allergies
     });
 
     const response = await pet.save();
@@ -55,12 +55,14 @@ const createPet = async (req, res, next) => {
 const updatePet = async (req, res) => {
   //#swaggertags=['pets']
   const petId = new ObjectId(req.params.id);
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
   const pet = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    petname: req.body.petname,
-    password: hashedPassword,
+    name: req.body.name,
+    type: req.body.type,
+    breed: req.body.breed,
+    owner: req.body.owner,
+    vet: req.body.vet,
+    diet: req.body.diet,
+    allergies: req.body.allergies
   };
 
   const response = await Pet.findByIdAndUpdate(petId, pet, { new: true });

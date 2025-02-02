@@ -37,7 +37,6 @@ const createUser = async (req, res, next) => {
       lastName: req.body.lastName,
       username: req.body.username,
       password: hashedPassword,
-      admin: false
     });
 
     const response = await user.save();
